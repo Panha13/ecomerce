@@ -30,7 +30,18 @@ Route::get('/cart', function () {
 });
 Route::get('/admins', [AdminController::class, 'index'])->middleware('is_admin');
 //Route::get('/login', [AdminController::class, 'login'])->name('login');
-Auth::routes();
+Auth::routes([
+    'register' => false, // Registration Routes...
+    'reset' => false, // Password Reset Routes...
+]);
+if (!env('ALLOW_REGISTRATION', false)) {
+    Route::any('/register', function() {
+        return view('error404');
+    });
+    Route::any('/password/reset', function() {
+        return view('error404');
+    });
+}
 
 
 Route::get('/home', [MyHomeController::class, 'index'])->name('home');
